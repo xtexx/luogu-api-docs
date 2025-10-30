@@ -52,7 +52,7 @@
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>DataResponse&lt;{ rankList: List&lt;Rating&gt; }&gt;</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;{ ranking: List&lt;GuRatingDetails&gt; }&gt;</code>)</td>
   </tr>
 </table>
 
@@ -69,7 +69,7 @@
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>DataResponse&lt;{ ranking: List&lt;EloRating &amp; { previous: EloRating | null }&gt; }&gt;</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;{ ranking: List&lt;EloRatingDetails &amp; { previous: EloRatingDetails | null }&gt; }&gt;</code>)</td>
   </tr>
 </table>
 

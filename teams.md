@@ -13,6 +13,19 @@
   </tr>
 </table>
 
+## 列出加入的团队
+
+<table>
+  <tr>
+    <th align="right">请求</th>
+    <td><code>GET /user/mine/team</code></td>
+  </tr>
+  <tr>
+    <th align="right">响应主体</th>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserTeamsData&gt;</code>)</td>
+  </tr>
+</table>
+
 ## 列出团队成员
 
 <table>

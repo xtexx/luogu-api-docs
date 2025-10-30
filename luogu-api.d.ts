@@ -180,7 +180,7 @@ export interface DataResponse<T> {
   currentTitle: string;
   currentTheme: Theme | null;
   currentTime: number;
-  currentUser?: User & Maybe<Self>;
+  currentUser?: LegacyUser & Maybe<LegacySelf>;
 }
 
 export interface LentilleDataResponse<T> {
@@ -189,7 +189,7 @@ export interface LentilleDataResponse<T> {
   status: number;
   locale: string;
   data: T;
-  user: (UserSummary & Maybe<SelfSummary>) | null;
+  user: (User & Maybe<Self & SelfStats>) | null;
   time: number;
   theme: Theme | null;
 }
@@ -349,7 +349,7 @@ export interface ConfigResponse {
   ContestMethod: {
     [id: number]: { type: string; id: number; name: string; color: string };
   };
-  ContestPublicType: {
+  ContestVisibility: {
     type: string;
     id: number;
     name: string;
@@ -368,14 +368,7 @@ export interface ConfigResponse {
   }[];
   ProblemFlag: { [id: number]: { type: string; id: number; name: string } };
   ProblemType: {
-    [id: string]: {
-      type: string;
-      id: string;
-      name: string;
-      vjudge: boolean;
-      userCreatable: boolean;
-      searchable: boolean;
-    };
+    [id: string]: { type: string; id: string; name: string; tds: string };
   };
   CodeLanguage: {
     [id: number]: {
@@ -409,6 +402,18 @@ export interface ConfigResponse {
   TicketStatus: {
     [id: number]: { type: string; id: number; name: string; color: string };
   };
+  TrainingType: {
+    [id: number]: {
+      type: string;
+      id: number;
+      name: string;
+      public: boolean;
+      color: string;
+      scope: "global" | "team" | "user" | "hidden";
+      select: boolean;
+      userCreatable: boolean;
+    };
+  };
   UserMessageReceiveMode: { type: string; id: number; name: string }[];
   UserNotificationType: {
     [id: number]: { type: string; id: number; name: string };
@@ -440,11 +445,13 @@ export interface ProblemData {
   bookmarked: boolean;
   contest: ContestSummary | null;
   vjudgeUsername: string | null;
-  lastLanguage: number | null;
-  lastCode: string | null;
+  lastLanguage: number;
+  lastCode: string;
+  lastCodeAt: number | null;
   recommendations: (ProblemSummary & Maybe<ProblemStatus>)[];
   forum: Forum | null;
   discussions: PostSummary[] | null;
+  locale: string;
   canEdit: boolean;
 }
 
@@ -508,29 +515,57 @@ export interface PostData {
 }
 
 export interface UserData {
+  prizes: []; // TODO
+  gu: GuRating;
+  elo: (EloRating & { previous: EloRating | null })[];
+  dailyCounts: Record<string, [number, number]>;
   user: UserDetails & UserStats & Maybe<SelfDetails>;
-  eloMax: { rating: number; time: number; latest: boolean } | null;
-  passedProblems?: ProblemSummary[];
-  submittedProblems?: ProblemSummary[];
-  teams?: {
-    team: TeamSummary;
-    group: Group;
-    user: UserSummary;
-    type: number;
-    permission: number;
-  }[];
 }
 
-export interface UserSettingsData {
-  userSetting: UserSettings;
-  usernameUpdateTime: number;
+export interface UserPracticeData {
+  passed: ProblemSummary[];
+  submitted: ProblemSummary[];
+  elo: EloRating[];
+  user: UserDetails & UserStats & Maybe<SelfDetails>;
+}
+
+export interface UserTeamsData {
+  teams: {
+    user: UserSummary & Maybe<SelfSummary>;
+    type: number;
+    team: TeamSummary;
+    pinned: boolean;
+  }[];
+  user: UserDetails & UserStats & Maybe<SelfDetails>;
+}
+
+export interface UserAccountsData {
+  qqGroupToken: string;
+  vjudgeAccounts: { username: string; oj: string }[];
+  openidAccounts: { username: string; platform: number }[];
+}
+
+export interface UserPreferencesData {
   openSourceJoinTime: number;
-  hasSet2FA: boolean;
-  ccfLevelShowLevel: number;
-  vjudgeAccounts: { oj: string; username: string }[];
-  openIdAccounts: { platform: number; username: string }[];
+  setting: UserPreferences;
+}
+
+export interface UserPrizeSettingsData {
+  prizeLevel: {
+    oi: { level: number; show: boolean };
+    xcpc: { level: number; show: boolean };
+  };
   prizes: []; // TODO
-  user: UserDetails & Maybe<SelfDetails>;
+  hasRealName: boolean;
+}
+
+export interface UserSecuritySettingsData {
+  totpSet: boolean;
+  realName: string | null;
+  phone: string | null;
+  email: string | null;
+  usernameUpdateTime: number;
+  adminLogs: []; // TODO
 }
 
 export interface TeamData {
@@ -721,22 +756,25 @@ export interface ProblemDetails extends Problem {
   acceptLanguages: number[];
   samples: [input: string, output: string][];
   limits: { time: number[]; memory: number[] };
-  stdCode: string;
   showScore?: boolean;
   score?: number | null;
+  bestRecord: {
+    id: number;
+    status: number;
+    enableO2: boolean;
+    score?: number;
+  } | null;
   vjudge?: { id: string; link: string };
   translation: string;
 }
 
 export interface ProblemContents {
-  user: null;
-  version: 1;
   name: string;
-  background: string;
+  background: string | null;
   description: string;
-  formatI: string;
-  formatO: string;
-  hint: string;
+  formatI: string | null;
+  formatO: string | null;
+  hint: string | null;
   locale: string;
 }
 
@@ -971,15 +1009,19 @@ export interface SelfSummary {
   verified: boolean;
 }
 
-export interface Self extends SelfSummary {
-  unreadMessageCount: number;
-  unreadNoticeCount: number;
-}
+export interface Self extends SelfSummary {}
 
 export interface SelfDetails extends Self {
   organization: null; // TODO
-  email: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
+  realName: string | null;
+}
+
+export interface SelfStats {
+  unreadMessageCount: number;
+  unreadNoticeCount: number;
+  learnMode: boolean;
 }
 
 export type UserColor =
@@ -1011,11 +1053,10 @@ export interface User extends UserSummary {
   followerCount: number;
   ranking: number | null;
   eloValue: number | null;
-  blogAddress: string | null;
 }
 
 export interface UserDetails extends User {
-  rating?: Rating;
+  rating: null;
   registerTime: number;
   introduction: string | null;
   prize: { year: number; contestName: string; prize: string }[];
@@ -1034,8 +1075,11 @@ export interface UserPractice {
   submittedProblemCount: number | null;
 }
 
-export interface UserSettings {
+export interface UserPreferences {
+  codeFont: string | null;
+  colorScheme: null;
   openSource: number;
+  codeSharingWithAi: boolean;
   learningMode: boolean;
   messageMode: number;
   acceptPromotion: boolean;
@@ -1138,27 +1182,36 @@ export interface Paste {
   public: boolean;
 }
 
-export interface Rating {
-  contestRating: number;
-  socialRating: number;
-  practiceRating: number;
-  basicRating: number;
-  prizeRating: number;
-  calculateTime: number;
-  user: UserSummary;
+export interface GuRating {
   rating: number;
+  time: number;
+  scores: {
+    rating: number;
+    social: number;
+    basic: number;
+    contest: number;
+    practice: number;
+    prize: number;
+  };
+}
+
+export interface GuRatingDetails extends GuRating {
+  user: UserSummary;
 }
 
 export interface EloRatingSummary {
-  contest: ContestSummary;
   rating: number;
   time: number;
   latest: boolean;
+  contest?: ContestSummary;
 }
 
 export interface EloRating extends EloRatingSummary {
   userCount: number;
-  prevDiff: number;
+  prevDiff: number | null;
+}
+
+export interface EloRatingDetails extends EloRating {
   user: UserSummary;
 }
 
@@ -1307,6 +1360,17 @@ export interface LegacyForum {
   id: number;
   name: string;
   slug: string;
+}
+
+/** @deprecated */
+export interface LegacyUser extends User {
+  blogAddress: string | null;
+}
+
+/** @deprecated */
+export interface LegacySelf extends Self {
+  unreadMessageCount: number;
+  unreadNoticeCount: number;
 }
 
 /** @deprecated */

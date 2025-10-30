@@ -9,7 +9,7 @@
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>DataResponse&lt;UserData&gt;</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserData&gt;</code>)</td>
   </tr>
 </table>
 
@@ -27,6 +27,19 @@
   <tr>
     <th align="right">响应主体</th>
     <td><code>application/json</code> (<code>{ users: [UserSummary | null] }</code>)</td>
+  </tr>
+</table>
+
+## 获取练习情况
+
+<table>
+  <tr>
+    <th align="right">请求</th>
+    <td><code>GET /user/:uid/practice</code></td>
+  </tr>
+  <tr>
+    <th align="right">响应主体</th>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserPracticeData&gt;</code>)</td>
   </tr>
 </table>
 
@@ -98,7 +111,7 @@
   </tr>
 </table>
 
-## 获取设置
+## 获取账号设置
 
 <table>
   <tr>
@@ -107,24 +120,63 @@
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>DataResponse&lt;UserSettingsData&gt;</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserAccountsData&gt;</code>)</td>
   </tr>
 </table>
 
-## 更新设置
+## 获取偏好设置
 
 <table>
   <tr>
     <th align="right">请求</th>
-    <td><code>POST /api/user/updateSetting</code></td>
-  </tr>
-  <tr>
-    <th align="right">请求主体</th>
-    <td><code>application/json</code> (<code>{ settings: UserSettings }</code>)</td>
+    <td><code>GET /user/setting/preference</code></td>
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>{}</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserPreferencesData&gt;</code>)</td>
+  </tr>
+</table>
+
+## 更新偏好设置
+
+<table>
+  <tr>
+    <th align="right">请求</th>
+    <td><code>POST /user/setting/preference/update</code></td>
+  </tr>
+  <tr>
+    <th align="right">请求主体</th>
+    <td><code>application/json</code> (<code>UserPreferences</code>)</td>
+  </tr>
+  <tr>
+    <th align="right">响应主体</th>
+    <td><code>application/json</code> (<code>{ setting: UserPreferences }</code>)</td>
+  </tr>
+</table>
+
+## 获取奖项认证设置
+
+<table>
+  <tr>
+    <th align="right">请求</th>
+    <td><code>GET /user/setting/prize</code></td>
+  </tr>
+  <tr>
+    <th align="right">响应主体</th>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserPrizeSettingsData&gt;</code>)</td>
+  </tr>
+</table>
+
+## 获取安全设置
+
+<table>
+  <tr>
+    <th align="right">请求</th>
+    <td><code>GET /user/setting/security</code></td>
+  </tr>
+  <tr>
+    <th align="right">响应主体</th>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;UserSecuritySettingsData&gt;</code>)</td>
   </tr>
 </table>
 
