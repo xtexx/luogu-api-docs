@@ -512,6 +512,7 @@ export interface PostData {
   post: PostDetails;
   replies: List<Reply>;
   canReply: boolean;
+  canDelete: boolean;
 }
 
 export interface UserData {
