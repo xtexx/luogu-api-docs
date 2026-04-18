@@ -9,7 +9,7 @@
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>DataResponse&lt;TeamData&gt;</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;TeamData&gt;</code>)</td>
   </tr>
 </table>
 
@@ -31,11 +31,11 @@
 <table>
   <tr>
     <th align="right">请求</th>
-    <td><code>GET /api/team/members/:id</code></td>
+    <td><code>GET /team/:id/member</code></td>
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>{ members: TeamMember[] }</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;TeamMembersData&gt;</code>)</td>
   </tr>
 </table>
 
@@ -44,15 +44,15 @@
 <table>
   <tr>
     <th align="right">请求</th>
-    <td><code>GET /api/team/problems/:id</code></td>
+    <td><code>GET /team/:id/problem</code></td>
   </tr>
   <tr>
     <th align="right">参数</th>
-    <td><code>{ page: number }</code></td>
+    <td><code>TeamProblemListParams</code></td>
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>{ problems: List&lt;LegacyProblem&gt; }</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;TeamProblemsData&gt;</code>)</td>
   </tr>
 </table>
 
@@ -61,15 +61,15 @@
 <table>
   <tr>
     <th align="right">请求</th>
-    <td><code>GET /api/team/trainings/:id</code></td>
+    <td><code>GET /team/:id/training</code></td>
   </tr>
   <tr>
     <th align="right">参数</th>
-    <td><code>{ page: number }</code></td>
+    <td><code>{ page?: number }</code></td>
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>{ trainings: List&lt;ProblemSet&gt; }</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;TeamProblemSetsData&gt;</code>)</td>
   </tr>
 </table>
 
@@ -78,15 +78,15 @@
 <table>
   <tr>
     <th align="right">请求</th>
-    <td><code>GET /api/team/contests/:id</code></td>
+    <td><code>GET /team/:id/contest</code></td>
   </tr>
   <tr>
     <th align="right">参数</th>
-    <td><code>{ page: number }</code></td>
+    <td><code>{ page?: number }</code></td>
   </tr>
   <tr>
     <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>{ contests: List&lt;Contest&gt; }</code>)</td>
+    <td><code>application/json</code> (<code>LentilleDataResponse&lt;TeamContestsData&gt;</code>)</td>
   </tr>
 </table>
 

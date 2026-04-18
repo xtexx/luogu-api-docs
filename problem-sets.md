@@ -34,23 +34,6 @@
   </tr>
 </table>
 
-## 列出团队题单
-
-<table>
-  <tr>
-    <th align="right">请求</th>
-    <td><code>GET /api/team/trainings/:id</code></td>
-  </tr>
-  <tr>
-    <th align="right">参数</th>
-    <td><code>{ page?: number }</code></td>
-  </tr>
-  <tr>
-    <th align="right">响应主体</th>
-    <td><code>application/json</code> (<code>{ trainings: List&lt;ProblemSet&gt; }</code>)</td>
-  </tr>
-</table>
-
 ## 获取题单
 
 <table>

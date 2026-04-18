@@ -35,6 +35,13 @@ export interface RecordListParams {
   orderBy?: number;
 }
 
+export interface TeamProblemListParams {
+  page?: number;
+  keyword?: string;
+  orderBy?: "pid" | "name";
+  order?: "asc" | "desc";
+}
+
 export interface ThemeListParams {
   page?: number;
   orderBy?: string;
@@ -462,6 +469,7 @@ export interface ProblemData {
   translations: { [locale: string]: ProblemContents };
   bookmarked: boolean;
   contest: ContestSummary | null;
+  contestOrigin: null; // TODO
   vjudgeUsername: string | null;
   lastLanguage: number;
   lastCode: string;
@@ -597,17 +605,46 @@ export interface UserSecuritySettingsData {
 }
 
 export interface TeamData {
-  team: Team;
-  currentTeamMember: TeamMember | null;
-  latestDiscussions: LegacyPost[] | null;
-  joinRequest: null; // TODO
   groups: Group[];
+  notice: string;
+  latestDiscussions: Post[] | null;
   usages: {
     problem: [number, number];
     training: [number, number];
     contest: [number, number];
     file: [number, number];
   };
+  joinRequest: null; // TODO
+  currentMember: TeamMember | null;
+  team: Team;
+}
+
+export interface TeamMembersData {
+  members: List<TeamMember>;
+  groups: Group[];
+  groupMemberCount: { [id: number]: number };
+  joinRequests: [] | null; // TODO
+  currentMember: TeamMember | null;
+  team: Team;
+}
+
+export interface TeamProblemsData {
+  problems: List<Problem & Maybe<ProblemStatus> & { provider: Team }>;
+  currentMember: TeamMember | null;
+  team: Team;
+}
+
+export interface TeamProblemSetsData {
+  trainings: List<ProblemSet>;
+  currentMember: TeamMember | null;
+  team: Team;
+}
+
+export interface TeamContestsData {
+  contests?: List<Contest>;
+  joinRequest?: null; // TODO
+  currentMember: TeamMember | null;
+  team: Team;
 }
 
 export interface ChatListData {
@@ -854,15 +891,15 @@ export interface ScoringStrategy {
 }
 
 export interface ProblemSet {
+  id: number;
+  name: string;
+  type: number;
+  provider: UserSummary | TeamSummary;
   createTime: number;
   deadline: number | null;
   problemCount: number;
   marked: boolean;
   markCount: number;
-  id: number;
-  title: string;
-  type: number;
-  provider: UserSummary | TeamSummary;
 }
 
 export interface ProblemSetDetails extends ProblemSet {
@@ -926,6 +963,7 @@ export interface ContestSettings {
   ratingGroup: string | null;
   eloThreshold: number | null;
   eloCenter: number | null;
+  squadMax: number | null;
 }
 
 export interface Score {
@@ -1039,8 +1077,9 @@ export interface Forum {
   name: string;
   type: number;
   slug: string;
-  color: string;
+  color: string | null;
   problem?: ProblemSummary & Maybe<ProblemStatus>;
+  team?: TeamSummary;
 }
 
 export interface Activity {
@@ -1138,20 +1177,21 @@ export interface TeamSummary {
 }
 
 export interface Team extends TeamSummary {
-  createTime: number;
-  master: UserSummary;
-  setting: { description: string; notice?: string; joinPermission: number };
-  premiumUntil?: number;
   type: number;
   memberCount: number;
+  createTime: number;
+  master: UserSummary;
+  description: string;
+  openness: number;
+  premiumUntil?: number | null;
 }
 
 export interface TeamMember {
-  group: Group;
-  user: UserSummary;
+  group: Group | null;
+  user: UserSummary & Maybe<SelfSummary>;
   type: number;
-  permission: number;
-  realName: string;
+  permission?: number;
+  realName?: string;
 }
 
 export interface Group {
