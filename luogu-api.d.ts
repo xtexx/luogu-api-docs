@@ -969,17 +969,17 @@ export interface ContestSettings {
 export interface Score {
   details: {
     [pid: string]: {
-      /** 该题得分。对于 ICPC 赛制，该字段为大于等于 0 表示已通过，小于 0 表示未通过，其绝对值为提交错误的次数 */
+      /** 该题得分。对于 ICPC 赛制，该字段为大于等于 0 表示已通过，小于 0 表示未通过，其绝对值为提交错误的次数。 */
       score: number;
-      /** 对于 OI 赛制表示运行时间（单位毫秒），否则为相对于比赛开始的提交时间（单位秒） */
+      /** 对于 OI 赛制表示运行时间（单位毫秒），否则为相对于比赛开始的提交时间（单位秒）。 */
       runningTime?: number;
     };
   } | [];
   user: UserSummary & Maybe<SelfSummary>;
   squad?: Squad;
-  /** 在参加了比赛但没有任何提交时，该项为 null */
+  /** 在参加了比赛但没有任何提交时，该项为 `null`。 */
   score: number | null;
-  /** OI 赛制为总运行时间（单位毫秒），否则为总罚时（单位秒）*/
+  /** OI 赛制为总运行时间（单位毫秒），否则为总罚时（单位秒）。 */
   runningTime: number;
 }
 
