@@ -473,22 +473,38 @@ export interface ProblemSetData {
   privilegedTeams: TeamSummary[];
 }
 
+export interface Squad {
+  name: string;
+  leader: UserSummary;
+  members: UserSummary[];
+  code: string;
+}
+
 export interface ContestData {
   contest: ContestDetails;
   contestProblems: {
     score: number;
-    problem: LegacyProblemSummary;
-    submitted: boolean;
+    problem: ProblemSummary & Maybe<ProblemStatus>;
   }[] | null;
-  isScoreboardFrozen: boolean;
-  accessLevel: number;
-  joined: boolean;
-  userElo: (EloRatingSummary & { previous: EloRatingSummary | null }) | null;
+  canEdit: boolean;
+  canViewScoreboard: boolean;
+  /**
+   * 是否已加入比赛。
+   * 对于普通比赛，往往是 0 / 1 表示未加入/已加入。
+   * 对于团队赛，可能是状态掩码：
+   * 例如 `1` 代表已个人报名，
+   * `17` 代表（个人+作为小队队长），
+   * `33` 代表（个人+作为小队成员）等。
+   */
+  joined: number;
+  squad?: Squad | null;
+  score?: Score;
+  userElo?: (EloRating & { previous: EloRating | null }) | null;
 }
 
 export interface CreatedContestData {
   isContestAdmin: boolean;
-  contest: ContestDetails & { joinCode: string };
+  contest: LegacyContestDetails & { joinCode: string };
   contestProblems: { score: number; problem: LegacyProblemSummary }[];
   contestSetting: ContestSettings;
   privilegedTeams: TeamSummary[];
@@ -863,7 +879,7 @@ export interface ContestSummary {
   endTime: number;
 }
 
-export interface Contest extends ContestSummary {
+export interface LegacyContest extends ContestSummary {
   ruleType: number;
   visibilityType: number;
   invitationCodeType: number;
@@ -873,11 +889,28 @@ export interface Contest extends ContestSummary {
   problemCount: number;
 }
 
-export interface ContestDetails extends Contest {
+export interface Contest extends ContestSummary {
+  method: number;
+  visibility: number;
+  invitationCodeType: number;
+  rated: boolean | number;
+  host: (UserSummary & Maybe<SelfSummary>) | TeamSummary;
+  problemCount: number;
+  squad: boolean;
+}
+
+export interface LegacyContestDetails extends LegacyContest {
   description: string;
   totalParticipants: number;
   eloDone: boolean;
   canEdit: boolean;
+}
+
+export interface ContestDetails extends Contest {
+  description: string;
+  totalParticipants: number;
+  eloThreshold: number | null;
+  eloDone: boolean;
 }
 
 export interface ContestSettings {
@@ -895,9 +928,19 @@ export interface ContestSettings {
 }
 
 export interface Score {
-  details: { [pid: string]: { score: number; runningTime?: number } } | [];
-  user: UserSummary;
-  score: number;
+  details: {
+    [pid: string]: {
+      /** 该题得分。对于 ICPC 赛制，该字段为大于等于 0 表示已通过，小于 0 表示未通过，其绝对值为提交错误的次数 */
+      score: number;
+      /** 对于 OI 赛制表示运行时间（单位毫秒），否则为相对于比赛开始的提交时间（单位秒） */
+      runningTime?: number;
+    };
+  } | [];
+  user: UserSummary & Maybe<SelfSummary>;
+  squad?: Squad;
+  /** 在参加了比赛但没有任何提交时，该项为 null */
+  score: number | null;
+  /** OI 赛制为总运行时间（单位毫秒），否则为总罚时（单位秒）*/
   runningTime: number;
 }
 
@@ -1388,4 +1431,14 @@ export interface LegacyBlog {
   ContentDescription: string;
   ThumbUp: number;
   Content: string;
+}
+
+export interface ContestListParams {
+  page?: number;
+  /** 比赛名称或者编号。 */
+  name?: string;
+  /** 赛制。1：OI，2：ICPC，3：乐多，4：IOI。未提供时为全部。 */
+  method?: number;
+  /** 分类。1：官方比赛，2：团队公开赛，4：个人公开赛，11：重现赛。未提供时为全部。 */
+  public?: number;
 }
