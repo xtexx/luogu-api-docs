@@ -15,6 +15,16 @@ export interface ProblemSetListParams {
   type?: "official" | "select";
 }
 
+export interface ContestListParams {
+  page?: number;
+  /** 比赛名称或者编号。 */
+  name?: string;
+  /** 赛制。1：OI，2：ICPC，3：乐多，4：IOI。未提供时为全部。 */
+  method?: number;
+  /** 分类。1：官方比赛，2：团队公开赛，4：个人公开赛，11：重现赛。未提供时为全部。 */
+  public?: number;
+}
+
 export interface RecordListParams {
   page?: number;
   pid?: string;
@@ -473,13 +483,6 @@ export interface ProblemSetData {
   privilegedTeams: TeamSummary[];
 }
 
-export interface Squad {
-  name: string;
-  leader: UserSummary;
-  members: UserSummary[];
-  code: string;
-}
-
 export interface ContestData {
   contest: ContestDetails;
   contestProblems: {
@@ -504,7 +507,7 @@ export interface ContestData {
 
 export interface CreatedContestData {
   isContestAdmin: boolean;
-  contest: LegacyContestDetails & { joinCode: string };
+  contest: LegacyContestDetails;
   contestProblems: { score: number; problem: LegacyProblemSummary }[];
   contestSetting: ContestSettings;
   privilegedTeams: TeamSummary[];
@@ -879,16 +882,6 @@ export interface ContestSummary {
   endTime: number;
 }
 
-export interface LegacyContest extends ContestSummary {
-  ruleType: number;
-  visibilityType: number;
-  invitationCodeType: number;
-  rated: boolean;
-  eloThreshold: number | null;
-  host: UserSummary | TeamSummary;
-  problemCount: number;
-}
-
 export interface Contest extends ContestSummary {
   method: number;
   visibility: number;
@@ -899,18 +892,18 @@ export interface Contest extends ContestSummary {
   squad: boolean;
 }
 
-export interface LegacyContestDetails extends LegacyContest {
-  description: string;
-  totalParticipants: number;
-  eloDone: boolean;
-  canEdit: boolean;
-}
-
 export interface ContestDetails extends Contest {
   description: string;
   totalParticipants: number;
   eloThreshold: number | null;
   eloDone: boolean;
+}
+
+export interface Squad {
+  name: string;
+  leader: UserSummary;
+  members: UserSummary[];
+  code: string;
 }
 
 export interface ContestSettings {
@@ -1384,6 +1377,26 @@ export interface LegacyProblemDetails extends LegacyProblem {
 }
 
 /** @deprecated */
+export interface LegacyContest extends ContestSummary {
+  ruleType: number;
+  visibilityType: number;
+  invitationCodeType: number;
+  rated: boolean;
+  eloThreshold: number | null;
+  host: UserSummary | TeamSummary;
+  problemCount: number;
+}
+
+/** @deprecated */
+export interface LegacyContestDetails extends LegacyContest {
+  description: string;
+  totalParticipants: number;
+  eloDone: boolean;
+  canEdit: boolean;
+  joinCode: string;
+}
+
+/** @deprecated */
 export interface LegacyPostSummary {
   id: number;
   title: string;
@@ -1431,14 +1444,4 @@ export interface LegacyBlog {
   ContentDescription: string;
   ThumbUp: number;
   Content: string;
-}
-
-export interface ContestListParams {
-  page?: number;
-  /** 比赛名称或者编号。 */
-  name?: string;
-  /** 赛制。1：OI，2：ICPC，3：乐多，4：IOI。未提供时为全部。 */
-  method?: number;
-  /** 分类。1：官方比赛，2：团队公开赛，4：个人公开赛，11：重现赛。未提供时为全部。 */
-  public?: number;
 }
