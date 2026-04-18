@@ -283,13 +283,15 @@ export interface ConfigResponse {
     };
   };
   contestVisibilityTypes: {
-    id: number;
-    name: string;
-    color: string;
-    userCreatable: boolean;
-    scope: "disabled" | "global" | "team" | "personal";
-    invitation: boolean;
-  }[];
+    [id: number]: {
+      id: number;
+      name: string;
+      color: string;
+      userCreatable: boolean;
+      scope: "disabled" | "global" | "team" | "personal";
+      invitation: boolean;
+    };
+  };
   userRelationshipTypes: { id: number; type: string }[];
   scoringStrategyTypes: {
     [id: number]: { id: number; type: string; name: string };
@@ -336,6 +338,10 @@ export interface ConfigResponse {
   };
   teamJoinPermissionTypes: { id: number; type: string; name: string }[];
   userPrizeShowLevelType: { id: number; type: string; name: string }[];
+  PaymentStatus: { type: string; id: number; name: string }[];
+  TeamMemberPermissionType: {
+    [id: number]: { type: string; id: number; name: string };
+  };
   ArticleCategory: {
     [id: number]: {
       type: string;
@@ -360,14 +366,16 @@ export interface ConfigResponse {
     [id: number]: { type: string; id: number; name: string; color: string };
   };
   ContestVisibility: {
-    type: string;
-    id: number;
-    name: string;
-    color: string;
-    scope: "disabled" | "global" | "team" | "user";
-    userCreatable: boolean;
-    invitation: boolean;
-  }[];
+    [id: number]: {
+      type: string;
+      id: number;
+      name: string;
+      color: string;
+      scope: "disabled" | "global" | "team" | "user";
+      userCreatable: boolean;
+      invitation: boolean;
+    };
+  };
   ImageHostingWatermarkStyle: { type: string; id: number }[];
   OpenIdPlatform: { [id: number]: { type: string; id: number; name: string } };
   ProblemDifficulty: {
