@@ -5,7 +5,7 @@
 对于所有请求：
 
 - 文本编码为 UTF-8。
-- 头字段 `user-agent` 的值不能含有子串 `python-requests` 或其任意大小写形式。
+- 头字段 `user-agent` 的值不能含有子串 `python-requests`（或其任何大小写形式），也不能以 `mozilla/`（或其任何大小写形式）开头。
 
 对于非 `GET` 请求：
 
