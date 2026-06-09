@@ -143,7 +143,6 @@
   </tr>
 </table>
 
-
 ## 编辑文章
 
 <table>
@@ -166,7 +165,7 @@
 <table>
   <tr>
     <th align="right">请求</th>
-    <td><code>`POST /article/:lid/delete</code></td>
+    <td><code>POST /article/:lid/delete</code></td>
   </tr>
   <tr>
     <th align="right">响应主体</th>
@@ -209,7 +208,6 @@
 </table>
 
 ## 赞/踩文章
-
 
 <table>
   <tr>

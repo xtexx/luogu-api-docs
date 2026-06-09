@@ -67,6 +67,11 @@ export interface CreatedArticleListParams {
   title?: string;
 }
 
+export interface FavoriteArticleParams {
+  /** 该参数若存在，则表示取消收藏。 */
+  remove?: 1;
+}
+
 export interface BlogListParams {
   uid: number;
   keyword?: string;
@@ -1304,23 +1309,23 @@ export interface EloRatingDetails extends EloRating {
 export interface Article {
   lid: string;
   title: string;
+  category: number;
   time: number;
   author: UserSummary & Maybe<SelfSummary>;
   upvote: number;
   replyCount: number;
   favorCount: number;
-  category: number;
   status: number;
   solutionFor: (ProblemSummary & Maybe<ProblemStatus>) | null;
   promoteStatus: number;
   collection: ArticleCollectionSummary | null;
-  content: string;
-  top: number;
+  content?: string;
   promoteResult?: {
     updateAt: number | null;
     rejectReason?: string | null;
   };
   categoryOld?: string;
+  top?: number;
 }
 
 export interface ArticleDetails extends Article {
@@ -1492,10 +1497,4 @@ export interface LegacyBlog {
   ContentDescription: string;
   ThumbUp: number;
   Content: string;
-}
-
-
-export interface FavoriteArticleParams {
-  /** 该参数若存在，则表示取消收藏。值必须为 1 。 */
-  remove: number;
 }
