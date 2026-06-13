@@ -559,7 +559,7 @@ export interface UserData {
   prizes: []; // TODO
   gu: GuRating;
   elo: (EloRating & { previous: EloRating | null })[];
-  dailyCounts: Record<string, [number, number]>;
+  dailyCounts: { [date: string]: [count: number, color: number] } | [];
   user: UserDetails & UserStats & Maybe<SelfDetails>;
 }
 
@@ -1102,6 +1102,7 @@ export interface SelfSummary {
 export interface Self extends SelfSummary {}
 
 export interface SelfDetails extends Self {
+  rating: null;
   organization: null; // TODO
   email: string | null;
   phone: string | null;
@@ -1146,11 +1147,10 @@ export interface User extends UserSummary {
 }
 
 export interface UserDetails extends User {
-  rating: null;
+  elo: EloRatingSummary | null;
   registerTime: number;
   introduction: string | null;
   prize: { year: number; contestName: string; prize: string }[];
-  elo: EloRatingSummary | null;
 }
 
 export type UserStats = Maybe<UserRelationship> & UserPractice;
